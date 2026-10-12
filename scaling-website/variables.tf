@@ -10,6 +10,21 @@ variable "project_name" {
   default     = "Testing_Terraform"
 }
 
+variable "bucket_backend" {
+  description = "Bucket used for the backend"
+  type = string
+}
+
+variable "key_backend" {
+  description = "Key used for the backend"
+  type = string
+}
+
+variable "dynamodb_backend" {
+  description = "Dynamodb used for the backend"
+  type = string
+}
+
 variable "bucket_name" {
   description = "Name of bucket"
   type        = string

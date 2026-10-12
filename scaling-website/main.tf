@@ -5,6 +5,25 @@ terraform {
       version = "~> 5.0"
     }
   }
+
+  backend "s3" {
+    bucket         = var.bucket_backend
+    key            = var.key_backend
+    region         = "ap-southeast-1"
+    dynamodb_table = var.dynamodb_backend
+    encrypt        = true
+  }
+}
+
+resource "aws_dynamodb_table" "terraform_locks" {
+  name         = "terraform-locks"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "LockID"
+
+  attribute {
+    name = "LockID"
+    type = "S"
+  }
 }
 
 provider "aws" {
@@ -42,7 +61,7 @@ module "asg" {
 
   project_name      = var.project_name
   sg_id             = module.network.sg_id
-  subnet_ids        = module.network.public_subnet_ids
+  subnet_ids        = module.network.private_subnet_id
   target_group_arns = [module.alb.target_group_arn]
   instance_type     = var.instance_type
 }
